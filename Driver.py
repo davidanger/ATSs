@@ -1,5 +1,7 @@
 import time
 
+# Digital Multimeter
+
 
 class K34461A:
     _ser = None
@@ -77,6 +79,8 @@ class K34401A:
         __value = float(self._ser.read()[:-1])
         print(f'DC Current:{__value}V\n')
         return __value
+
+# Power Supply
 
 
 class E3631A:
@@ -285,6 +289,8 @@ class HP6644A:
         self._ser.write('OUTPut 0')
         time.sleep(0.1)
         print('HP6644A Stop Output\n')
+
+# Electronic Load
 
 
 class C6312A:
