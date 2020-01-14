@@ -127,7 +127,7 @@ class DP832A:
         time.sleep(0.1)
         self._ser.write('SYSTem:REMote')
         time.sleep(0.1)
-        self._ser.write('SYSTem:BEEPer')
+        # self._ser.write('SYSTem:BEEPer')
         print(f'DP832A Ver:{__ver}Is Ready\n')
 
     def close(self):
@@ -146,6 +146,7 @@ class DP832A:
         CH3 8V/5A
         """
         self._ser.write(f'APPLy {output}, {voltage:.3f}, {current:.3f}')
+        self._ser.write(f'OUTP {output}, ON')
         time.sleep(0.1)
         print(f'DP832A {output}: {voltage:.3f}V {current:.3f}A\n')
 
@@ -180,7 +181,7 @@ class DP832A:
         return __value
 
     def stop(self):
-        self._ser.write('OUTPut 0')
+        self._ser.write('OUTPut ALL, OFF')
         time.sleep(0.1)
         print('DP832A Stop Output\n')
 
@@ -418,7 +419,7 @@ class PLZ205W:
         """
         self.load_off()
         time.sleep(0.1)
-        self._ser.write(f'CURR: {current:.5f}')
+        self._ser.write(f'CURR {current:.5f}')
         self._ser.write('OUTP ON')
         time.sleep(0.1)
         print(f'{self._name} CC LOAD: {current:.5f}A\n')
@@ -441,7 +442,7 @@ class PLZ205W:
         """
         self.load_off()
         time.sleep(0.1)
-        self._ser.write(f'VOLT: {voltage:.4f}')
+        self._ser.write(f'VOLT {voltage:.4f}')
         self._ser.write('OUTP ON')
         time.sleep(0.1)
         print(f'{self._name} CV LOAD: {voltage:.4f}V\n')
@@ -465,7 +466,7 @@ class PLZ205W:
         """
         self.load_off()
         time.sleep(0.1)
-        self._ser.write(f'POW: {power:.5f}')
+        self._ser.write(f'POW {power:.5f}')
         self._ser.write('OUTP ON')
         time.sleep(0.1)
         print(f'{self._name} CP LOAD: {power:.5f}W\n')
