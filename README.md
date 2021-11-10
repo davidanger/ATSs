@@ -38,7 +38,9 @@ Power Supply:
 * KeySight E3631A
 * KeySight 6644A
 * RIGOL DP832A
+* RIGOL DP811A
 * ITECH IT6861A
+* Chroma C62012P
 
 Electronic Load:
 

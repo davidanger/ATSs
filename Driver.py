@@ -186,6 +186,82 @@ class DP832A:
         print('DP832A Stop Output\n')
 
 
+class DP811A:
+    _ser = None
+
+    def begin(self):
+        self._ser.open()
+        time.sleep(0.2)
+        self._ser.write('SYSTem:VERSion?')
+        __ver = self._ser.read()
+        time.sleep(0.1)
+        self._ser.write('SYSTem:REMote')
+        time.sleep(0.1)
+        # self._ser.write('SYSTem:BEEPer')
+        print(f'DP811A Ver:{__ver}Is Ready\n')
+
+    def close(self):
+        self.stop()
+        time.sleep(0.1)
+        self._ser.write('SYSTem:LOCal')
+        time.sleep(0.1)
+        self._ser.close()
+        print('DP811A Closed\n')
+
+    def set_range(self, _range):
+        """
+        Set Output Range
+        _range: P20V|P40V|LOW|HIGH
+        P20V|LOW 20V/10A
+        P40V|HIGH 40V/5A
+        """
+        self._ser.write(f'OUTP:RANG {_range}')
+        print(f'DP811A Output Range is {_range}')
+
+    def set_vi(self, voltage, current):
+        """
+        Apply the voltage and current.
+        Range P20V|LOW: 20V/10A
+        Range P40V|HIGH: 40V/5A
+        """
+        self._ser.write(f'APPLy {voltage:.3f}, {current:.3f}')
+        self._ser.write(f'OUTP ON')
+        time.sleep(0.1)
+        print(f'DP811A: {voltage:.3f}V {current:.3f}A\n')
+
+    def measure_v(self):
+        """
+        Measure Output Voltage
+        """
+        self._ser.write(f'MEAS?')
+        __value = float(self._ser.read()[:-1])
+        print(f'DP811A OUT Voltage: {__value}V')
+        return __value
+
+    def measure_i(self):
+        """
+        Measure Output Current
+        """
+        self._ser.write(f'MEAS:CURR?')
+        __value = float(self._ser.read()[:-1])
+        print(f'DP832A OUT Current: {__value}A')
+        return __value
+
+    def measure_p(self, output):
+        """
+        Measure Output Power
+        """
+        self._ser.write(f'MEAS:POWE?')
+        __value = float(self._ser.read()[:-1])
+        print(f'DP832A OUT Power: {__value}W')
+        return __value
+
+    def stop(self):
+        self._ser.write('OUTPut OFF')
+        time.sleep(0.1)
+        print('DP811A Stop Output\n')
+
+
 class IT6861A:
     _ser = None
 
@@ -261,7 +337,6 @@ class IT6861A:
         time.sleep(0.1)
         print('IT6861A Stop Output\n')
 
-
 class HP6644A:
     _ser = None
 
@@ -290,6 +365,59 @@ class HP6644A:
         self._ser.write('OUTPut 0')
         time.sleep(0.1)
         print('HP6644A Stop Output\n')
+
+class C62012P:
+    _ser = None
+
+    def begin(self):
+        self._ser.open()
+        time.sleep(0.2)
+        self._ser.write('CONF:REM ON')
+        print(f'C62012P Is Ready\n')
+
+    def close(self):
+        self.stop()
+        time.sleep(0.1)
+        self._ser.close()
+        print('C62012P Closed\n')
+
+    def set_vi(self, voltage, current):
+        self._ser.write(f'SOUR:VOLT {voltage:.3f}')
+        self._ser.write(f'SOUR:CURR {current:.3f}')
+        self._ser.write('CONF:OUTP ON')
+        time.sleep(0.1)
+        print(f'C62012P OUT: {voltage:.3f}V {current:.3f}A\n')
+    def measure_v(self):
+        """
+        Measure the output voltage.
+        """
+        self._ser.write('MEAS:VOLT?')
+        __value = float(self._ser.read()[:-1])
+        print(f'C62012P OUT Voltage: {__value}V')
+        return __value
+
+    def measure_i(self):
+        """
+        Measure the output current.
+        """
+        self._ser.write('MEAS:CURR?')
+        __value = float(self._ser.read()[:-1])
+        print(f'C62012P OUT Current: {__value}A')
+        return __value
+
+    def measure_p(self):
+        """
+        Measure the ouput power.
+        """
+        self._ser.write('MEAS:POW?')
+        __value = float(self._ser.read()[:-1])
+        print(f'C62012P OUT Power: {__value}W')
+        return __value
+        
+    def stop(self):
+        self._ser.write('CONF:OUTP OFF')
+        time.sleep(0.1)
+        print('C62012P Stop Output\n')
 
 # Electronic Load
 
