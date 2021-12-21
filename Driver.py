@@ -106,12 +106,77 @@ class E3631A:
         print('E3631A Closed\n')
 
     def set_vi(self, output, voltage, current):
+        '''
+        Set Chenal Output Voltage and Current
+
+        Parameters
+        ----------
+        output : str
+            'CH1'|'CH2'|'CH3'
+            Select Chenal.
+            CH1:6V/5A CH2/3:25V/1A
+        voltage : float
+            DESCRIPTION.
+        current : float
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        '''
         self._ser.write(f'APPLy {output}, {voltage:.3f}, {current:.3f}')
+        time.sleep(0.1)
+        self._ser.write(f'OUTP 1,(@{output[-1:]})')
         time.sleep(0.1)
         print(f'E3631A {output}: {voltage:.3f}V {current:.3f}A\n')
 
+    def measure_v(self, output):
+        '''
+        Measure Chenal Voltage
+
+        Parameters
+        ----------
+        output : str
+            'CH1'|'CH2'|'CH3'
+            Select Chenal.
+            
+        Returns
+        -------
+        __value : float
+            Chenal Voltage
+
+        '''
+        self._ser.write(f'MEAS:VOLT? {output}')
+        __value = float(self._ser.read()[:-1])
+        print(f'E3631A {output} Voltage:{__value}V\n')
+        return __value
+
+    def measure_i(self, output):
+        '''
+        Measure Chenal Current
+
+        Parameters
+        ----------
+        output : str
+            'CH1'|'CH2'|'CH3'
+            Select Chenal.
+
+        Returns
+        -------
+        __value : float
+            Chenal Current
+
+        '''
+        self._ser.write(f'MEAS:CURR? {output}')
+        __value = float(self._ser.read()[:-1])
+        print(f'E3631A {output} Current:{__value}V\n')
+        return __value
+
     def stop(self):
-        self._ser.write('OUTPut 0')
+        self._ser.write('OUTPut 0,(@1)')
+        self._ser.write('OUTPut 0,(@2)')
+        self._ser.write('OUTPut 0,(@3)')
         time.sleep(0.1)
         print('E3631A Stop Output\n')
 
@@ -444,6 +509,24 @@ class C6312A:
         self._ser.close()
         print(f'{self._name} Closed\n')
 
+    def set_mode(self, mode):
+        '''
+        Set Working MODE
+
+        Parameters
+        ----------
+        mode : str
+            CCH|CCL|CCDL|CCDH|CRL|CRH|CV
+
+        Returns
+        -------
+        None.
+
+        '''
+        self._ser.write(f'MODE {mode}')
+        time.sleep(0.1)
+        print(f'{self._name} MODE: {mode}\n')
+        
     def set_cc(self, from_current, to_current):
         """
         Set CC Mode and Load ON.
